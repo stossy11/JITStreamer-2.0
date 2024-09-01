@@ -9,7 +9,7 @@ import configparser
 import requests
 import os
 import concurrent.futures
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect, url_for
 from urllib.parse import urlparse
 from time import sleep
 from zeroconf import ServiceInfo, Zeroconf
@@ -212,15 +212,14 @@ def refresh_devs():
             tunneld_devices = get_tunneld_devices()
             
             if not tunneld_devices:
-                dev = []
                 logging.warning("No devices returned from get_tunneld_devices().")
+                return  # Early exit if no devices
             
             for dev in tunneld_devices:
                 if dev is not None:
                     # Submit each mounting task to the executor
                     futures.append(executor.submit(mount_device, dev))
                 else:
-                    dev = []
                     logging.warning("Received None device from get_tunneld_devices().")
             
             # Process the results as they complete
@@ -228,18 +227,19 @@ def refresh_devs():
                 dev = future.result()  # Get the device after it's mounted
                 if dev is not None:
                     try:
-                        
-                        # Check if device already exists in the database
-                        db_device = devs.query.filter_by(udid=device.udid).first()
+                        # Check if device already exists in the list
+                        db_device = next((d for d in devs if d.udid == dev.udid), None)
                         
                         if not db_device:
                             # Add new device
-                            devs.append(Device(dev, dev.name, dev.udid, []).refresh_apps())
+                            new_device = Device(dev, dev.name, dev.udid, [])
+                            new_device.refresh_apps()
+                            devs.append(new_device)
                     except Exception as e:
                         logging.error(f"Error while processing device {dev}: {e}")
                 else:
-                    dev = []
                     logging.warning("Received None result from a future.")
+    
     save_devs()
 
 def get_device(udid: str):
@@ -314,22 +314,26 @@ def refresh_device_apps(device_id):
 @app.route('/<device_id>/<action>/', methods=['GET'])
 def perform_action(device_id, action):
     device = get_device(device_id)
-    tunnel_url = f"http://127.0.0.1:{TUNNELD_DEFAULT_ADDRESS[1]}/start-tunnel?ip={request.remote_addr}&udid={device_id}"
-        
-    response = requests.get(tunnel_url)
-    refresh_devs()
     if device:
-            
         result = device.enable_jit(action)
-        return jsonify({"result": result})
+        return jsonify(result)
+    else:
+        ip = request.remote_addr
+        udid = device_id
+        start_tunneld_ip(ip, udid)
+        device = get_device(device_id)
+        if device:
+            result = device.enable_jit(action)
+            return jsonify(result)
+        return jsonify({"ERROR": "Device not found!"}), 404
             
-    return jsonify({"ERROR": "Device not found!"}), 404
+    
 
 def start_tunneld_proc():
     TunneldRunner.create("0.0.0.0", TUNNELD_DEFAULT_ADDRESS[1],
                          protocol=TunnelProtocol('quic'), mobdev2_monitor=tunnelsettings("mobdev2"), usb_monitor=tunnelsettings("usb"), wifi_monitor=tunnelsettings("wifi"), usbmux_monitor=tunnelsettings("usbmuxd"))
                          
-@app.route('/upload/', methods=['GET', 'POST'])
+@app.route('/uploads/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # Check if the post request has the file part
@@ -349,29 +353,24 @@ def upload_file():
             user_home = os.path.expanduser('~')
             upload_folder = os.path.join(user_home, '.pymobiledevice3')
             
-        if not filename.lower().endswith('.plist'):
-            return jsonify({"ERROR": "Only .plist files are allowed"}), 400
+            if not filename.lower().endswith('.plist'):
+                return jsonify({"ERROR": "Only .plist files are allowed"}), 400
 
-        
-        flash('File successfully uploaded and saved')
-        return redirect(url_for('upload_file'))
-
-        # Create the directory if it doesn't exist
-        if not os.path.exists(upload_folder):
-            os.makedirs(upload_folder)
-        # Save the file to the specified directory
-        file_path = os.path.join(upload_folder, filename)
-        try:
-            file.save(file_path)
-        except:
-            return jsonify({"OK": f"File upload failed"}), 400
+            # Create the directory if it doesn't exist
+            if not os.path.exists(upload_folder):
+                os.makedirs(upload_folder)
+            # Save the file to the specified directory
+            file_path = os.path.join(upload_folder, filename)
+            try:
+                file.save(file_path)
+            except:
+                return jsonify({"OK": f"File upload failed"}), 400
             
-        file_root, file_extension = os.path.splitext(filename)
+            file_root, file_extension = os.path.splitext(filename)
         
-        
-        start_tunneld_ip(ip, file_root)
-        
-        return jsonify({"OK": f"File uploaded"}), 200
+            ip = request.remote_addr
+            start_tunneld_ip(ip, file_root)
+            return jsonify({"OK": f"File uploaded"}), 200
     
     return '''
     <!doctype html>
@@ -389,7 +388,7 @@ def start_tunneld_ip(ip, udid):
         response = requests.get(tunnel_url)
         refresh_devs()
     except:
-        flash('Unable to add tunnel')
+        print('Unable to add tunnel')
 
 def prompt_device_list(device_list: list):
     device_question = [inquirer3.List('device', message='choose device', choices=device_list, carousel=True)]
