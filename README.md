@@ -33,7 +33,8 @@ git clone https://github.com/stossy11/JITStreamer-2.0.git
 cd JITStreamer-2.0
 
 # Install JITStreamer
-pip install -U -e .
+pip3 install -U -e .
+(if that doesnt work try pip install -U -e . )
 ```
 ## How to use JITStreamer?
 - Make sure your device is connected to a computer.
