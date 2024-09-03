@@ -34,8 +34,6 @@ cd JITStreamer-2.0
 
 # Install JITStreamer
 pip install -U -e .
-
-
 ```
 ## How to use JITStreamer?
 - Make sure your device is connected to a computer.
