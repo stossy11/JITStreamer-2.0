@@ -44,7 +44,7 @@ pip3 install -U -e .
 First you will need to get the pairing file from JITStreamer. (on Windows you will need to go to your user folder and find the .pymobiledevice3 folder)
 ``` 
 # Run this (in the terminal from before)
-JITStreaner --pair
+JITStreamer --pair
 
 # macOS
 open ~/.pymobiledevice3/ 
