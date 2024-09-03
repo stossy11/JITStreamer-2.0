@@ -1,0 +1,1 @@
+pymobiledevice3 @ git+https://github.com/jawshoeadan/pymobiledevice3#egg=pymobiledevice3

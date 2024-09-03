@@ -15,10 +15,11 @@ from time import sleep
 from zeroconf import ServiceInfo, Zeroconf
 from werkzeug.utils import secure_filename
 
+from pymobiledevice3 import usbmux, pair_records, common
 from pymobiledevice3.remote.common import TunnelProtocol
 from pymobiledevice3.exceptions import AlreadyMountedError
 from pymobiledevice3.usbmux import select_devices_by_connection_type
-from pymobiledevice3.lockdown import LockdownClient, create_using_usbmux
+from pymobiledevice3.lockdown import create_using_tcp, LockdownClient, create_using_usbmux
 from pymobiledevice3.services.installation_proxy import InstallationProxyService
 from pymobiledevice3.services.mobile_image_mounter import auto_mount_personalized
 from pymobiledevice3.services.dvt.instruments.process_control import ProcessControl
@@ -75,6 +76,7 @@ if not config.has_section('Tunnel'):
     config.set('Tunnel', 'usb', 'true')
     config.set('Tunnel', 'wifi', 'true')
     config.set('Tunnel', 'usbmuxd', 'true')
+    config.set('Tunnel', 'start-tunnel-on-every-rq', 'true')
 
 # Save the default configuration back to the file if it's newly created
 with open(config_path, 'w') as configfile:
@@ -259,7 +261,7 @@ def list_devices():
     devices = devs
 
     # Check the see_udid setting and decide how to format the response
-    if settingsbools('see_udid'):
+    if settings('see_udid'):
         response = {device.name: device.udid for device in devices} if devices else {"ERROR": "Could not find any device!"}
     else:
         return jsonify({"ERROR": "This Request is not Permitted!"})
@@ -314,6 +316,9 @@ def refresh_device_apps(device_id):
 @app.route('/<device_id>/<action>/', methods=['GET'])
 def perform_action(device_id, action):
     device = get_device(device_id)
+    ip = request.remote_addr
+    udid = device_id
+    start_tunneld_ip(ip, device_id)
     if device:
         result = device.enable_jit(action)
         return jsonify(result)
