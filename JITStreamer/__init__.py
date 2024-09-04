@@ -38,24 +38,6 @@ config_path = os.path.join(config_folder, 'config.ini')
 # Ensure the .JITStreamer directory exists
 if not os.path.exists(config_folder):
     os.makedirs(config_folder)
-
-# If running as root, adjust ownership to the original user
-if os.geteuid() == 0:
-    user_home = os.getenv('SUDO_USER_HOME') or os.getenv('HOME')
-    user_name = os.getenv('SUDO_USER') or getpass.getuser()
-    user_uid = int(os.getenv('SUDO_UID', os.getuid()))
-    user_gid = int(os.getenv('SUDO_GID', os.getgid()))
-
-    # Set ownership of the directory
-    os.chown(config_folder, user_uid, user_gid)
-    
-    # Create an empty config file if it doesn't exist
-    if not os.path.exists(config_path):
-        with open(config_path, 'w') as configfile:
-            pass
-
-    # Set ownership of the file
-    os.chown(config_path, user_uid, user_gid)
     
 # Initialize and read the config file
 config = configparser.ConfigParser(allow_no_value=True)
