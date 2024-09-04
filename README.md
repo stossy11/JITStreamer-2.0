@@ -41,7 +41,7 @@ pip3 install -U -e .
 - You will need the IP of your Server / Computer from the VPN
 - JITStreamer will need to be installed on that computer (if you are using a server you still need JITStreamer installed on your computer)
 
-First you will need to get the pairing file from JITStreamer. (on Windows you will need to go to your user folder and find the .pymobiledevice3 folder)
+First you will need to get the pairing file from JITStreamer. (on Windows you will need to go to your user folder and find the .pymobiledevice3 folder, **this will need to be run on your host computer as your device needs to be plugged in**)
 ``` 
 # Run this (in the terminal from before)
 JITStreamer --pair
