@@ -2,7 +2,7 @@
 This is a JIT Enabler for iOS 17.4+ over VPN or over Wi-Fi / USB
 
 ## Requirements
-- A Mac, Linux or Windows Computer and / or Server
+- A Mac, Linux or Windows Computer (You can also do this with a Server but a host computer is needed to pair your device)
 - A VPN such as [Tailscale](https://tailscale.com) (Wireguard based VPNs are the only ones that have been tested)
 - Python 3.10+ (with pip / pip3 installed)
 - `git` (on Windows you can get it [here](https://github.com/git-guides/install-git#install-git-on-windows))
