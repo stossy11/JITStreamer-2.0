@@ -9,6 +9,7 @@ import configparser
 import requests
 import os
 import concurrent.futures
+import plistlib
 from flask import Flask, request, jsonify, redirect, url_for
 from urllib.parse import urlparse
 from time import sleep
@@ -171,14 +172,14 @@ def load_devs():
     except FileNotFoundError:
         devs = []
 
-def mount_device(dev):
+async def mount_device(dev):
     if dev is None:
         logging.warning("Received None device to mount.")
         return None
     
     try:
-        # Attempt to mount the device
-        asyncio.run(auto_mount_personalized(dev))
+        # Mount the device asynchronously
+        await auto_mount_personalized(dev)
         return dev
     except AlreadyMountedError:
         logging.info(f"Device {dev} already mounted.")
@@ -187,44 +188,43 @@ def mount_device(dev):
         logging.error(f"Error mounting device {dev}: {e}")
         return None
 
-def refresh_devs():
+async def refresh_devs():
     global devs
+    tunneld_devices = get_tunneld_devices()
+    
+    if not tunneld_devices:
+        logging.warning("No devices returned from get_tunneld_devices().")
+        return  # Early exit if no devices
+    
     with app.app_context():
-        # Use ThreadPoolExecutor to queue auto_mount_personalized with 2-3 workers
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-            futures = []
-            tunneld_devices = get_tunneld_devices()
-            
-            if not tunneld_devices:
-                logging.warning("No devices returned from get_tunneld_devices().")
-                return  # Early exit if no devices
-            
-            for dev in tunneld_devices:
-                if dev is not None:
-                    # Submit each mounting task to the executor
-                    futures.append(executor.submit(mount_device, dev))
-                else:
-                    logging.warning("Received None device from get_tunneld_devices().")
-            
-            # Process the results as they complete
-            for future in concurrent.futures.as_completed(futures):
-                dev = future.result()  # Get the device after it's mounted
-                if dev is not None:
-                    try:
-                        # Check if device already exists in the list
-                        db_device = next((d for d in devs if d.udid == dev.udid), None)
-                        
-                        if not db_device:
-                            # Add new device
-                            new_device = Device(dev, dev.name, dev.udid, [])
-                            new_device.refresh_apps()
-                            devs.append(new_device)
-                    except Exception as e:
-                        logging.error(f"Error while processing device {dev}: {e}")
-                else:
-                    logging.warning("Received None result from a future.")
+        # Create a list of async tasks to mount devices concurrently
+        tasks = [mount_device(dev) for dev in tunneld_devices if dev is not None]
+        
+        # Run the tasks concurrently using asyncio.gather
+        results = await asyncio.gather(*tasks)
+        
+        # Process the results
+        for dev in results:
+            if dev is not None:
+                try:
+                    # Check if device already exists in the list
+                    db_device = next((d for d in devs if d.udid == dev.udid), None)
+                    
+                    if not db_device:
+                        # Add new device
+                        new_device = Device(dev, dev.name, dev.udid, [])
+                        new_device.refresh_apps()
+                        devs.append(new_device)
+                except Exception as e:
+                    logging.error(f"Error while processing device {dev}: {e}")
+            else:
+                logging.warning("Received None result from a device mounting task.")
     
     save_devs()
+
+def run_refresh_devs():
+    # Launch the refresh_devs function asynchronously
+    asyncio.run(refresh_devs())
 
 def get_device(udid: str):
     global devs
@@ -283,13 +283,16 @@ def add_device():
         
     try:
         start_tunneld_ip(ip, udid)
-        return jsonify({"OK": response.text})
+        return jsonify(response.text)
     except Exception as e:
         return jsonify({"ERROR": str(e)}), 500
 
 @app.route('/<device_id>/re/', methods=['GET'])
 def refresh_device_apps(device_id):
     device = get_device(device_id)
+    ip = request.remote_addr
+    udid = device_id
+    start_tunneld_ip(ip, device_id)
     if device:
         device.refresh_apps()
         return jsonify({"OK": "Refreshed app list!"})
@@ -340,19 +343,43 @@ def upload_file():
             user_home = os.path.expanduser('~')
             upload_folder = os.path.join(user_home, '.pymobiledevice3')
             
-            if not filename.lower().endswith('.plist'):
-                return jsonify({"ERROR": "Only .plist files are allowed"}), 400
-
             # Create the directory if it doesn't exist
             if not os.path.exists(upload_folder):
                 os.makedirs(upload_folder)
-            # Save the file to the specified directory
+            
+            # Only accept .plist and .mobiledevicepairing files
+            if not filename.lower().endswith('.plist') and not filename.lower().endswith('.mobiledevicepairing'):
+                return jsonify({"ERROR": "Only .plist and .mobiledevicepairing files are allowed"}), 400
+            
+            # Save the file temporarily to read its content
             file_path = os.path.join(upload_folder, filename)
             try:
                 file.save(file_path)
             except:
-                return jsonify({"OK": f"File upload failed"}), 400
+                return jsonify({"ERROR": f"File upload failed"}), 400
             
+            # If it's a .mobiledevicepairing file, extract the UDID from the file
+            if filename.lower().endswith('.mobiledevicepairing'):
+                try:
+                    with open(file_path, 'rb') as f:
+                        plist_data = plistlib.load(f)
+                    
+                    # Extract the UDID from the plist data
+                    udid = plist_data.get('UDID', None)
+                    
+                    if not udid:
+                        return jsonify({"ERROR": "UDID not found in the file"}), 400
+                    
+                    # Rename the file to include the UDID as the filename
+                    new_filename = f"{udid}.mobiledevicepairing"
+                    new_file_path = os.path.join(upload_folder, new_filename)
+                    os.rename(file_path, new_file_path)
+                    
+                    file_path = new_file_path  # Update the file path for further use
+                    
+                except Exception as e:
+                    return jsonify({"ERROR": f"Failed to parse the file: {str(e)}"}), 400
+
             file_root, file_extension = os.path.splitext(filename)
         
             ip = request.remote_addr
@@ -373,7 +400,7 @@ def start_tunneld_ip(ip, udid):
     tunnel_url = f"http://127.0.0.1:{TUNNELD_DEFAULT_ADDRESS[1]}/start-tunnel?ip={ip}&udid={udid}"
     try:
         response = requests.get(tunnel_url)
-        refresh_devs()
+        run_refresh_devs()
     except:
         print('Unable to add tunnel')
 
