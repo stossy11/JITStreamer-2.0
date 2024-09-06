@@ -258,7 +258,7 @@ def version():
 def refresh():
     # refresh_all
     if settings('refresh_all'):
-        refresh_devs()
+        run_refresh_devs()
         return jsonify({"OK": "Refreshed!"})
         
     return jsonify({"ERROR": "This Request is not Permitted!"})
@@ -449,7 +449,7 @@ def start_server(verbose, timeout, pair, version):
         tunneld = multiprocessing.Process(target=start_tunneld_proc)
         tunneld.start()
         sleep(timeout)
-        refresh_devs()
+        run_refresh_devs()
         
     try:
         # Try to convert to integer
