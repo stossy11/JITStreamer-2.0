@@ -188,7 +188,7 @@ async def mount_device(dev):
         logging.error(f"Error mounting device {dev}: {e}")
         return None
 
-async def refresh_devs():
+def refresh_devs():
     global devs
     tunneld_devices = get_tunneld_devices()
     
@@ -198,7 +198,7 @@ async def refresh_devs():
     
     with app.app_context():
         # Create a list of async tasks to mount devices concurrently
-        tasks = [mount_device(dev) for dev in tunneld_devices if dev is not None]
+        tasks = [asyncio.run(mount_device(dev)) for dev in tunneld_devices if dev is not None]
         
         # Run the tasks concurrently using asyncio.gather
         results = await asyncio.gather(*tasks)
@@ -258,7 +258,7 @@ def version():
 def refresh():
     # refresh_all
     if settings('refresh_all'):
-        run_refresh_devs()
+        refresh_devs()
         return jsonify({"OK": "Refreshed!"})
         
     return jsonify({"ERROR": "This Request is not Permitted!"})
@@ -400,7 +400,7 @@ def start_tunneld_ip(ip, udid):
     tunnel_url = f"http://127.0.0.1:{TUNNELD_DEFAULT_ADDRESS[1]}/start-tunnel?ip={ip}&udid={udid}"
     try:
         response = requests.get(tunnel_url)
-        run_refresh_devs()
+        refresh_devs()
     except:
         print('Unable to add tunnel')
 
@@ -449,7 +449,7 @@ def start_server(verbose, timeout, pair, version):
         tunneld = multiprocessing.Process(target=start_tunneld_proc)
         tunneld.start()
         sleep(timeout)
-        run_refresh_devs()
+        refresh_devs()
         
     try:
         # Try to convert to integer
