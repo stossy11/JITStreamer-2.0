@@ -393,7 +393,7 @@ def upload_file():
     '''
 
 def start_tunneld_ip(ip, udid):
-    tunnel_url = f"http://127.0.0.1:{TUNNELD_DEFAULT_ADDRESS[1]}/start-tunnel?ip={ip}&udid={udid}"
+    tunnel_url = f"http://127.0.0.1:{TUNNELD_DEFAULT_ADDRESS[1]}/start-tunnel?ip={ip}&udid={udid}&connection_type=usbmux-tcp"
     try:
         response = requests.get(tunnel_url)
         refresh_devs()
