@@ -336,8 +336,7 @@ def upload_file():
             filename = secure_filename(file.filename)
             
             # Define the path to the ~/.pymobiledevice3/ directory
-            user_home = os.path.expanduser('~')
-            upload_folder = os.path.join(user_home, '.pymobiledevice3')
+            upload_folder = common.get_home_folder()
             
             # Create the directory if it doesn't exist
             if not os.path.exists(upload_folder):
