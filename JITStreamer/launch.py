@@ -3,7 +3,7 @@
 # Make executable standalone
 # nuitka-project-if: {OS} in ("Windows", "Linux", "Darwin", "FreeBSD"):
 #    nuitka-project: --onefile
-#    nuitka-project: --onefile-tempdir-spec="{CACHE_DIR}/SideJITServer"
+#    nuitka-project: --onefile-tempdir-spec="{CACHE_DIR}/JITStreamer"
 # nuitka-project-else:
 #    nuitka-project: --standalone
 
@@ -13,11 +13,11 @@
 #    nuitka-project: --include-module=jinxed.terminfo.ansicon
 #    nuitka-project: --include-module=jinxed.terminfo.xterm
 #    nuitka-project: --include-module=jinxed.terminfo.xterm_256color
-#    nuitka-project: --user-package-configuration-file=sidejitserver-nuitka-package.config.yml
+#    nuitka-project: --user-package-configuration-file=jitstreamer-nuitka-package.config.yml
 # nuitka-project-if: {OS} == "Linux":
-#    nuitka-project: --output-filename=SideJITServer-linux-x86_64.bin
+#    nuitka-project: --output-filename=JITStreamer-linux-x86_64.bin
 # nuitka-project-if: {OS} == "Darwin":
-#    nuitka-project: --output-filename=SideJITServer-mac-arm64.bin
+#    nuitka-project: --output-filename=JITStreamer-mac-arm64.bin
 
 # nuitka-project: --report=compilation-report.xml
 
