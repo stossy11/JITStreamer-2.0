@@ -41,7 +41,7 @@ pip3 install -U -e .
 - You will need the IP of your Server / Computer from the VPN
 - JITStreamer will need to be installed on that computer (if you are using a server you still need JITStreamer installed on your computer)
 
-**Jitterbugpair paring files may work but are not fully supported, if you want to try skip this step and go to "Send this file to your iDevice..." step**
+**Jitterbugpair paring files are not supported**
 
 First you will need to get the pairing file from JITStreamer. 
 **This will need to be run on your host computer as your device needs to be plugged in**
