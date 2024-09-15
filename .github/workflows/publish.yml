@@ -27,5 +27,5 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/Macleykun/JITStreamer-2.0:latest
+            ghcr.io/macleykun/jitstreamer-2.0:latest
           platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm64/v8
