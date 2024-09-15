@@ -1,6 +1,6 @@
 FROM python:3-slim-bookworm
 
-RUN apt-get update && apt-get install cargo git gcc libssl-dev -y
+RUN apt-get update && apt-get install cargo rustc git gcc libssl-dev -y
 
 RUN git clone https://github.com/stossy11/JITStreamer-2.0.git && \
     cd JITStreamer-2.0/ && \
