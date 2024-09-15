@@ -97,7 +97,7 @@ docker run -d --rm -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMI
 to do the pairing (only once?)
 docker exec -it testing:latest JITStreamer --pair
 docker cp namecontainer:/root/.pymobiledevice3/*.plist . # Copy that boi over to your idevice . Your UDID is in the name btw
-
+safd
 
 
 
