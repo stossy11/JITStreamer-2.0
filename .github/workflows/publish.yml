@@ -24,7 +24,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Convert to lowercase
         id: convert2lowercase
-        run: INPUT=${{ GITHUB_REPOSITORY }}; echo "GITHUB_REPOSITORY_LOWERCASE=${INPUT,,}">>${GITHUB_OUTPUT} 
+        run: INPUT=${{ env.GITHUB_REPOSITORY }}; echo "GITHUB_REPOSITORY_LOWERCASE=${INPUT,,}">>${GITHUB_OUTPUT} 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
