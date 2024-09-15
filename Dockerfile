@@ -1,7 +1,6 @@
 FROM python:3-alpine
 
-RUN apk add gcc git musl-dev openssl-dev
-
+RUN apk add gcc git musl-dev openssl-dev linux-headers #python3-dev
 COPY requirements.txt .
 
 RUN pip3 install -r requirements.txt
