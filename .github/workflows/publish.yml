@@ -22,13 +22,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Convert to lowercase
-        id: convert2lowercase
-        run: INPUT=${{ env.GITHUB_REPOSITORY }}; echo "GITHUB_REPOSITORY_LOWERCASE=${INPUT,,}">>${GITHUB_OUTPUT} 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
           tags: |
-            ghcr.io/${{steps.convert2lowercase.outputs.GITHUB_REPOSITORY_LOWERCASE}}:latest
+            ghcr.io/Macleykun/JITStreamer-2.0:latest
           platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm64/v8
