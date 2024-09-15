@@ -1,0 +1,31 @@
+name: Publish docker image JITStreamer-2.0
+
+on:
+  push:
+    branches:
+      - 'main'
+#    paths:
+#      - '**.sh'
+#      - 'Dockerfile'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: |
+            ghcr.io/Macleykun/JITStreamer-2.0:latest
+          platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm64/v8
