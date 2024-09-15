@@ -1,6 +1,6 @@
 FROM python:3-slim
 
-RUN apt-get update && apt-get install cargo rustc git gcc libssl-dev -y && cargo update -p associative-cache@2.0.0 --precise rustc 1.65.0
+RUN apt-get update && apt-get install cargo rustc git gcc libssl-dev -y && cargo update -p associative-cache@2.0.0 --precise rustc 1.65
 
 RUN git clone https://github.com/stossy11/JITStreamer-2.0.git && \
     cd JITStreamer-2.0/ && \
