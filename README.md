@@ -37,23 +37,6 @@ cd JITStreamer-2.0
 pip3 install -U -e .
 (if that doesnt work try pip install -U -e . )
 ```
-## WIP use Docker to setup JITstreamer
-Requirements:
-- Docker
-
-### How to run?
-cd into thr project dir after git cloning
-```
-docker build . -t testing
-
-docker run -d --rm -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host testing:latest
-
-# Pairing (only once?)
-
-docker exec -it testing:latest JITStreamer --pair
-
-docker cp namecontainer:/root/.pymobiledevice3/*.plist . # Copy that file over to your idevice. Your UDID is in the name
-```
 
 
 
