@@ -1,12 +1,7 @@
 name: Publish docker image JITStreamer-2.0
 
 on:
-  push:
-    branches:
-      - 'main'
-#    paths:
-#      - '**.sh'
-#      - 'Dockerfile'
+  workflow_dispatch:
 
 jobs:
   docker:
