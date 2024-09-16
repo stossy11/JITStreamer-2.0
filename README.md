@@ -48,7 +48,7 @@ docker build . -t testing
 
 docker run -d --rm -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host testing:latest
 
-# pPairing (only once?)
+# Pairing (only once?)
 
 docker exec -it testing:latest JITStreamer --pair
 
