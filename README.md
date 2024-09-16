@@ -86,9 +86,18 @@ Finally run the shortcut again and Enable JIT (the first time may take a while a
 - Stossy11 for this project
 - The rest of the [SideStore](https://sidestore.io) team for encouraging me and the others working to make [pymobiledevice3](https://github.com/doronz88/pymobiledevice3) better
 
+# WIP use Docker to setup JITstreamer
 
+Requirements: have docker
 
-
+How to run?
+go into the project dir
+docker build . -t testing
+docker run -d --rm -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host testing:latest
+to do the pairing (only once?)
+docker exec -it testing:latest JITStreamer --pair
+docker cp namecontainer:/root/.pymobiledevice3/*.plist . # Copy that boi over to your idevice . Your UDID is in the name btw
+safd
 
 
 
