@@ -10,6 +10,7 @@ This is a JIT Enabler for iOS 17.4+ over VPN or over Wi-Fi / USB
 
 ## Setup
 
+
 Open Terminal (on Windows Administrator Powershell) and run these commands (not the ones with the #)
 ```
 # Setup venv
@@ -36,6 +37,26 @@ cd JITStreamer-2.0
 pip3 install -U -e .
 (if that doesnt work try pip install -U -e . )
 ```
+## WIP use Docker to setup JITstreamer
+Requirements:
+- Docker
+
+### How to run?
+cd into thr project dir after git cloning
+```
+docker build . -t testing
+
+docker run -d --rm -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host testing:latest
+
+# pPairing (only once?)
+
+docker exec -it testing:latest JITStreamer --pair
+
+docker cp namecontainer:/root/.pymobiledevice3/*.plist . # Copy that file over to your idevice. Your UDID is in the name
+```
+
+
+
 ## How to use JITStreamer?
 - Make sure your device is connected to a computer.
 - You will need the IP of your Server / Computer from the VPN
@@ -86,18 +107,7 @@ Finally run the shortcut again and Enable JIT (the first time may take a while a
 - Stossy11 for this project
 - The rest of the [SideStore](https://sidestore.io) team for encouraging me and the others working to make [pymobiledevice3](https://github.com/doronz88/pymobiledevice3) better
 
-# WIP use Docker to setup JITstreamer
 
-Requirements: have docker
-
-How to run?
-go into the project dir
-docker build . -t testing
-docker run -d --rm -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host testing:latest
-to do the pairing (only once?)
-docker exec -it testing:latest JITStreamer --pair
-docker cp namecontainer:/root/.pymobiledevice3/*.plist . # Copy that boi over to your idevice . Your UDID is in the name btw
-safd
 
 
 
