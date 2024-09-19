@@ -1,5 +1,5 @@
 # JITStreamer-2.0
-This is a JIT Enabler for iOS 17.4+ over VPN or over Wi-Fi / USB
+This is a JIT Enabler for iOS 17.4+ over VPN (Wi-Fi only) or over Local Network / USB
 
 ## Requirements
 - A Mac, Linux or Windows Computer (You can also do this with a Server but a host computer is needed to pair your device)
