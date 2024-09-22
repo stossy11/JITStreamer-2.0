@@ -31,5 +31,5 @@ jobs:
           repo: ${{ steps.current.outputs.REPO }}
         with:
           push: true
-          tags: ghcr.io/$repo:latest
+          tags: ghcr.io/${repo}:latest
           platforms: linux/arm64/v8,linux/amd64 #,linux/arm/v7,linux/386
