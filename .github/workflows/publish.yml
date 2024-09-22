@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Convert current repo name to lowercase
+        id: current
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -28,5 +29,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/${REPO}:latest
+          tags: ghcr.io/${{ steps.current.outputs.REPO }}:latest
           platforms: linux/arm64/v8,linux/amd64 #,linux/arm/v7,linux/386
