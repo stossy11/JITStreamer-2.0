@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - v*
+      - '*'
   workflow_dispatch:
 
 jobs:
@@ -22,15 +22,17 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Docker meta
+      - name: Convert repo name to lowercase
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ghcr.io/${{ github.repository }}
-          tags: latest
+          tags: |
+            latest
+            type=semver,pattern={{version}}
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          platforms: linux/arm64/v8,linux/amd64 #,linux/arm/v7,linux/386
+          platforms: linux/arm64/v8,linux/amd64,linux/arm/v7,linux/386
