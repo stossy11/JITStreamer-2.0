@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker:
+  Jitcon:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
