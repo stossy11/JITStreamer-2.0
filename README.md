@@ -85,19 +85,18 @@ Finally run the shortcut again and Enable JIT (the first time may take a while a
 
 This is somewhat still a work in progress, but it has been tested and works as it's currently is made. Improvements like a smaller image, less privileges and maybe even a compose file to include a vpn server are planned as TODO.
 
-You can run it using:
+Make sure port 8080 is free first; then you can get the container with:
 ```bash
-docker run -it --rm -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host ghcr.io/stossy11/jitstreamer-2.0@latest
+docker run -it --rm -v ${PWD}/:/root/.pymobiledevice3/ -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host --CMD=--pair ghcr.io/stossy11/jitstreamer-2.0@latest --pair
 ```
 
-This will throw you inside the container (you can also choose to run this in the background but run JITStreamer instead of bash in the entrypoint).
-You can type in: JITStreamer --pair and if you plug in your phone it'll pair and the server will start. Note that port 8080 needs to be free!
+In the directory you've started this command you'll find your .plist file aswell as another directory JITStreamer uses. Best to not remove those but copy the .plist to you're device (and copy it's name while you're at it).
 
-In /root/.pymobiledevice3 you're udid named plist is placed. You can stop the server and get the content of the file and place it on your idevice or open a second terminal.
+Once you've gone through the shortcut and got it working, you can close by doing: CRLT + C. You're container get's cleaned up but you can start it in the background and on boot this time by using:
 
-On you're idevice, you can enter the IP of your linux device (http://ip.a.d.r) and use the plist. As long as your container is running in the foreground you can enjoy using JIT enabled apps!
-
-Ofcours this part will be rewritten to make it more userfriendly and work better out of the box (like using volumes).
+```bash
+docker run -d --restart=always -v ${PWD}/:/root/.pymobiledevice3/ -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host ghcr.io/stossy11/jitstreamer-2.0@latest
+```
 
 # Credits
 
@@ -106,8 +105,3 @@ Ofcours this part will be rewritten to make it more userfriendly and work better
 - doronz88 for [pymobiledevice3](https://github.com/doronz88/pymobiledevice3)
 - Stossy11 for this project
 - The rest of the [SideStore](https://sidestore.io) team for encouraging me and the others working to make [pymobiledevice3](https://github.com/doronz88/pymobiledevice3) better
-
-
-
-
-
