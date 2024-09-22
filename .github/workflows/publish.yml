@@ -27,7 +27,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v6
+        env:
+          repo: ${{ steps.current.outputs.REPO }}
         with:
           push: true
-          tags: ghcr.io/${{ steps.current.outputs.REPO }}:latest
+          tags: ghcr.io/$repo:latest
           platforms: linux/arm64/v8,linux/amd64 #,linux/arm/v7,linux/386
