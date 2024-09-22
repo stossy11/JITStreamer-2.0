@@ -173,12 +173,11 @@ def load_devs():
         devs = []
 
 def mount_device(dev):
-    if dev is None:
+    if not dev:
         logging.warning("Received None device to mount.")
         return None
     
     try:
-        # Convert the async auto_mount_personalized call to synchronous using asyncio.run
         asyncio.run(auto_mount_personalized(dev))
         return dev
     except AlreadyMountedError:
@@ -191,26 +190,20 @@ def mount_device(dev):
 def refresh_devs():
     global devs
     tunneld_devices = get_tunneld_devices()
-    
+
     if not tunneld_devices:
         logging.warning("No devices returned from get_tunneld_devices().")
-        return  # Early exit if no devices
+        return
 
     with app.app_context():
-        # Use ThreadPoolExecutor to handle device mounting in parallel
         with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-            futures = [executor.submit(mount_device, dev) for dev in tunneld_devices if dev is not None]
+            futures = {executor.submit(mount_device, dev): dev for dev in tunneld_devices if dev}
 
-            # Process the results as they complete
             for future in concurrent.futures.as_completed(futures):
-                dev = future.result()  # Get the device after it's mounted
-                if dev is not None:
+                dev = future.result()
+                if dev:
                     try:
-                        # Check if device already exists in the list
-                        db_device = next((d for d in devs if d.udid == dev.udid), None)
-                        
-                        if not db_device:
-                            # Add new device
+                        if not any(d.udid == dev.udid for d in devs):
                             new_device = Device(dev, dev.name, dev.udid, [])
                             new_device.refresh_apps()
                             devs.append(new_device)
