@@ -12,9 +12,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Convert current repo name to lowercase
-        id: current
-        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -25,11 +22,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: latest
       - name: Build and push
         uses: docker/build-push-action@v6
-        env:
-          repo: ${{ steps.current.outputs.repo }}
         with:
           push: true
-          tags: ghcr.io/${repo}:latest
+          tags: ${{ steps.meta.outputs.tags }}
           platforms: linux/arm64/v8,linux/amd64 #,linux/arm/v7,linux/386
