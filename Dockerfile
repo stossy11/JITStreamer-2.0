@@ -3,8 +3,8 @@ FROM python:3.11
 RUN apt-get update && apt-get install --no-install-recommends git gcc libssl-dev -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-# stossy11
-RUN git clone https://github.com/Macleykun/JITStreamer-2.0.git
+
+RUN git clone https://github.com/stossy11/JITStreamer-2.0.git
 
 WORKDIR /JITStreamer-2.0/
 
