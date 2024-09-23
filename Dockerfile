@@ -3,6 +3,9 @@ FROM python:3.11
 # You'll get thrown into a bash shell, you can run JITstreamer --pair . This is WIP and locally on my rpi 4 it worked (aarch64)
 RUN apt-get update && apt-get install git gcc libssl-dev -y
 
+#RUN apt-get update && apt-get install cargo rustc git gcc libssl-dev -y
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+
 RUN git clone https://github.com/stossy11/JITStreamer-2.0.git && cd JITStreamer-2.0/ && pip3 install -U -e .
 
 ENTRYPOINT ["JITStreamer"]

@@ -35,4 +35,4 @@ jobs:
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          platforms: linux/arm64/v8,linux/amd64 #,linux/386,linux/arm/v7 # need to update cargo for this one. Going to skip this for now
+          platforms: linux/arm64/v8,linux/amd64,linux/386,linux/arm/v7
