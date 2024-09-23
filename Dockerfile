@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install --no-install-recommends git gcc libssl-dev
 
 RUN git clone https://github.com/stossy11/JITStreamer-2.0.git
 
-WORKDIR JITStreamer-2.0/
+WORKDIR /JITStreamer-2.0/
 
 RUN chmod +x entrypoint.sh && pip3 install -U -e .
 
