@@ -3,9 +3,10 @@ FROM python:3.11
 RUN apt-get update && apt-get install git gcc libssl-dev -y
 
 #RUN apt-get update && apt-get install cargo rustc git gcc libssl-dev -y
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-ENV PATH="CARGO_HOME/bin:${PATH}"
-RUN rustup update stable
+RUN curl https://sh.rustup.rs -sSf | \
+    sh -s -- --default-toolchain stable -y
+
+ENV PATH=/root/.cargo/bin:$PATH
 
 RUN git clone https://github.com/stossy11/JITStreamer-2.0.git && cd JITStreamer-2.0/ && pip3 install -U -e .
 
