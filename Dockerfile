@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install git gcc libssl-dev -y
 
 #RUN apt-get update && apt-get install cargo rustc git gcc libssl-dev -y
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
+RUN ln -s $HOME/.cargo/env /etc/profile.d/cargo_env.sh
 RUN rustup update stable
 
 RUN git clone https://github.com/stossy11/JITStreamer-2.0.git && cd JITStreamer-2.0/ && pip3 install -U -e .
