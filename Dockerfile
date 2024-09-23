@@ -10,4 +10,4 @@ WORKDIR /JITStreamer-2.0/
 
 RUN chmod +x entrypoint.sh && pip3 install -U -e .
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
