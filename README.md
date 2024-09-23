@@ -87,7 +87,7 @@ This is somewhat still a work in progress, but it has been tested and works as i
 
 Make sure port 8080 is free first; then you can get the container with:
 ```bash
-docker run -it --rm -v ${PWD}/:/root/.pymobiledevice3/ -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host ghcr.io/stossy11/jitstreamer-2.0@latest --pair
+docker run -it --rm -v ${PWD}/:/root/.pymobiledevice3/ -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --network=host ghcr.io/stossy11/jitstreamer-2.0@latest --pair
 ```
 
 In the directory you've started this command you'll find your .plist file aswell as another directory JITStreamer uses. Best to not remove those but copy the .plist to you're device (and copy it's name while you're at it).
@@ -95,7 +95,7 @@ In the directory you've started this command you'll find your .plist file aswell
 Once you've gone through the shortcut and got it working, you can close by doing: CRLT + C. You're container get's cleaned up but you can start it in the background and on boot this time by using:
 
 ```bash
-docker run -d --restart=always -v ${PWD}/:/root/.pymobiledevice3/ -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --cap-add=NET_RAW --network=host ghcr.io/stossy11/jitstreamer-2.0@latest
+docker run -d --restart=always -v ${PWD}/:/root/.pymobiledevice3/ -v /var/run:/var/run --device /dev/net/tun --cap-add=NET_ADMIN --network=host ghcr.io/stossy11/jitstreamer-2.0@latest
 ```
 
 # Credits
