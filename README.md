@@ -81,6 +81,22 @@ Now Run the Shortcut and you will need to press the "Upload Your Pairing File" B
 
 Finally run the shortcut again and Enable JIT (the first time may take a while as it would be mounting your Personalised Disk Image)
 
+### How to use JITStreamer with Docker
+
+This is somewhat still a work in progress, but it has been tested and works as it's currently is made. Improvements like a smaller image, less privileges and maybe even a compose file to include a vpn server are planned as TODO.
+
+Make sure port 8080 is free first; then you can get the container with:
+```bash
+docker run -it --rm -v ${PWD}/:/root/.pymobiledevice3/ -v /var/run:/var/run --cap-add=NET_ADMIN --network=host ghcr.io/stossy11/jitstreamer-2.0@latest --pair
+```
+
+In the directory you've started this command you'll find your .plist file aswell as another directory JITStreamer uses. Best to not remove those but copy the .plist to you're device (and copy it's name while you're at it).
+
+Once you've gone through the shortcut and got it working, you can close by doing: CRLT + C. You're container get's cleaned up but you can start it in the background and on boot this time by using:
+
+```bash
+docker run -d --restart=always -v ${PWD}/:/root/.pymobiledevice3/ -v /var/run:/var/run --cap-add=NET_ADMIN --network=host ghcr.io/stossy11/jitstreamer-2.0@latest
+```
 
 # Credits
 
@@ -89,8 +105,3 @@ Finally run the shortcut again and Enable JIT (the first time may take a while a
 - doronz88 for [pymobiledevice3](https://github.com/doronz88/pymobiledevice3)
 - Stossy11 for this project
 - The rest of the [SideStore](https://sidestore.io) team for encouraging me and the others working to make [pymobiledevice3](https://github.com/doronz88/pymobiledevice3) better
-
-
-
-
-

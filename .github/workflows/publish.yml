@@ -1,10 +1,15 @@
 name: Publish docker image JITStreamer-2.0
 
 on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
   workflow_dispatch:
 
 jobs:
-  docker:
+  Jitcon:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -17,10 +22,17 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Convert repo name to lowercase
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            latest
+            type=semver,pattern={{version}}
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: |
-            ghcr.io/macleykun/jitstreamer-2.0:latest
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/386,
+          tags: ${{ steps.meta.outputs.tags }}
+          platforms: linux/arm64/v8,linux/amd64 #,linux/386,linux/arm/v7 <- can only work if you can get rustc 1.65
