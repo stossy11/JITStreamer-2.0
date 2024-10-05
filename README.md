@@ -98,7 +98,7 @@ Once you've gone through the shortcut and got it working, you can close by doing
 docker run -d --name jitstreamer-2.0 --restart=always -v ${PWD}/:/root/.pymobiledevice3/ -v /var/run:/var/run --cap-add=NET_ADMIN --network=host ghcr.io/stossy11/jitstreamer-2.0
 ```
 
-#### Use JITStreamer with Wireguard (docker-compose)
+### Use JITStreamer with Wireguard (docker-compose)
 
 This chapter resumes from the chapter above, this will make it possible to quickly get a VPN container which you can use to reach your JITStreamer-2.0 server to enable JIT everywhere.
 
