@@ -83,7 +83,7 @@ Finally run the shortcut again and Enable JIT (the first time may take a while a
 
 ### How to use JITStreamer with Docker
 
-This is somewhat still a work in progress, but it has been tested and works as its currently made. Improvements like a smaller image, less privileges and maybe even a compose file to include a vpn server are planned as TODO.
+This is somewhat still a work in progress, but it has been tested and works as it's currently made. Improvements like a smaller image, less privileges and maybe even a compose file to include a vpn server are planned as TODO.
 
 Make sure port 8080 is free first; then you can get the container with:
 ```bash
