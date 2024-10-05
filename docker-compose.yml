@@ -1,0 +1,26 @@
+services:
+  jitstreamer:
+    container_name: jitstreamer-2.0
+    restart: always
+    volumes:
+        - ${PWD}/:/root/.pymobiledevice3/
+        - /var/run:/var/run
+    cap_add:
+        - NET_ADMIN
+    network_mode: host
+    image: ghcr.io/stossy11/jitstreamer-2.0
+  wg-easy:
+    container_name: wg-easy
+    environment:
+        - WG_HOST=ur.public.ip.addr #$(curl -s https://ipv4.icanhazip.com/)
+        - PASSWORD_HASH=replaceme #docker run -it ghcr.io/wg-easy/wg-easy wgpw YOUR_PASSWORD
+        - WG_DEFAULT_DNS=1.1.1.1
+        - WG_ALLOWED_IPS=ur.local.ip.addr #$(hostname -I | cut -f1 -d' ')
+    volumes:
+        - ~/.wg-easy:/etc/wireguard
+    cap_add:
+        - NET_ADMIN
+        - SYS_MODULE
+    network_mode: host
+    restart: always
+    image: ghcr.io/wg-easy/wg-easy
