@@ -1,2 +1,2 @@
-pymobiledevice3@git+https://github.com/stossy11/pymobiledevice3#egg=pymobiledevice3
+pymobiledevice3@git+https://github.com/jawshoeadan/pymobiledevice3#egg=pymobiledevice3
 flask
