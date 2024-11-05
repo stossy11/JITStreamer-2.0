@@ -258,6 +258,7 @@ def get_device_apps(device_id):
     ip = request.remote_addr
     udid = device_id
     start_tunneld_ip(ip, udid)
+    refresh_devs()
     device = get_device(device_id)
     if device:
         return jsonify([a.asdict() for a in device.apps])
@@ -388,7 +389,6 @@ def start_tunneld_ip(ip, udid):
     tunnel_url = f"http://127.0.0.1:{TUNNELD_DEFAULT_ADDRESS[1]}/start-tunnel?ip={ip}&udid={udid}&connection_type=usbmux-tcp"
     try:
         response = requests.get(tunnel_url)
-        refresh_devs()
     except:
         print('Unable to add tunnel')
 
