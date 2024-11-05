@@ -51,15 +51,10 @@ pip3 install -U -e .
 First you will need to get the pairing file from JITStreamer. 
 **This will need to be run on your host computer as your device needs to be plugged in**
 ``` 
-# Run this (in the terminal from before)
+# Run this (in the terminal from before) and type in "y" when it asks
 JITStreamer --pair
-
-# macOS
-open ~/.pymobiledevice3/ 
 ```
-on Windows you will need to go to your user folder and find the .pymobiledevice3 folder
-
-You should now find the file that should be a .plist file (example: 00001111-000A1100A11101A.plist ignore the _remote plist file) 
+You should now find the file that should be a .plist file the name will correspond to your devices UDID (example: 00001111-000A1100A11101A.plist ignore the _remote plist file)
 
 Send this file to your iDevice over AirDrop or Emailing it to yourself (Please compress the file before sending it to your iDevice)
 
