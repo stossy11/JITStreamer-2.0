@@ -82,4 +82,5 @@ Finally run the shortcut again and Enable JIT (the first time may take a while a
 - Jawshoeadan for the [modified pymobiledevice3 version](https://github.com/jawshoeadan/pymobiledevice3)
 - doronz88 for [pymobiledevice3](https://github.com/doronz88/pymobiledevice3)
 - Stossy11 for this project
-- The rest of the [SideStore](https://sidestore.io) team for encouraging me and the others working to make [pymobiledevice3](https://github.com/doronz88/pymobiledevice3) better
+- The People working on [pymobiledevice3](https://github.com/doronz88/pymobiledevice3)
+- The rest of the [SideStore](https://sidestore.io) team for encouraging me!
