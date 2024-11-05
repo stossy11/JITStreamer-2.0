@@ -51,20 +51,14 @@ pip3 install -U -e .
 First you will need to get the pairing file from JITStreamer. 
 **This will need to be run on your host computer as your device needs to be plugged in**
 ``` 
-# Run this (in the terminal from before)
+# Run this (in the terminal from before) and type in "y" when it asks
 JITStreamer --pair
-
-# macOS
-open ~/.pymobiledevice3/ 
 ```
-on Windows you will need to go to your user folder and find the .pymobiledevice3 folder
-
-You should now find the file that should be a .plist file (example: 00001111-000A1100A11101A.plist ignore the _remote plist file) 
+You should now find the file that should be a .plist file the name will correspond to your devices UDID (example: 00001111-000A1100A11101A.plist ignore the _remote plist file)
 
 Send this file to your iDevice over AirDrop or Emailing it to yourself (Please compress the file before sending it to your iDevice)
 
-Now you will need to connect to the VPN from before (Number 2 in Requirements) and download this shortcut on your phone:
-https://www.icloud.com/shortcuts/a463b0f216cc445f8d0e5f355a7e7666
+Now you will need to connect to the VPN from before (Number 2 in Requirements) and download this shortcut on your phone: [here](https://github.com/stossy11/JITStreamer-2.0/raw/refs/heads/main/JITStreamer%202.0%20PB.shortcut)
 
 The UDID of your device will be the name of your pairing file and the address will be the ip of your server with http:// infront (example: "http://100.97.35.58")
 You will need to input your Pairing file into the shortcut.
@@ -88,4 +82,5 @@ Finally run the shortcut again and Enable JIT (the first time may take a while a
 - Jawshoeadan for the [modified pymobiledevice3 version](https://github.com/jawshoeadan/pymobiledevice3)
 - doronz88 for [pymobiledevice3](https://github.com/doronz88/pymobiledevice3)
 - Stossy11 for this project
-- The rest of the [SideStore](https://sidestore.io) team for encouraging me and the others working to make [pymobiledevice3](https://github.com/doronz88/pymobiledevice3) better
+- The People working on [pymobiledevice3](https://github.com/doronz88/pymobiledevice3)
+- The rest of the [SideStore](https://sidestore.io) team for encouraging me!
