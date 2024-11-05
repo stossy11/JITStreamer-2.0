@@ -191,7 +191,7 @@ def mount_device(dev):
 
 def refresh_devs():
     global devs
-    tunneld_devices = common.tunneld_devices
+    tunneld_devices = get_tunneld_devices()
 
     if not tunneld_devices:
         logging.warning("No devices returned from get_tunneld_devices().")
