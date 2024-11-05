@@ -58,8 +58,7 @@ You should now find the file that should be a .plist file the name will correspo
 
 Send this file to your iDevice over AirDrop or Emailing it to yourself (Please compress the file before sending it to your iDevice)
 
-Now you will need to connect to the VPN from before (Number 2 in Requirements) and download this shortcut on your phone:
-https://www.icloud.com/shortcuts/a463b0f216cc445f8d0e5f355a7e7666
+Now you will need to connect to the VPN from before (Number 2 in Requirements) and download this shortcut on your phone: [here](https://github.com/stossy11/JITStreamer-2.0/raw/refs/heads/main/JITStreamer%202.0%20PB.shortcut)
 
 The UDID of your device will be the name of your pairing file and the address will be the ip of your server with http:// infront (example: "http://100.97.35.58")
 You will need to input your Pairing file into the shortcut.
