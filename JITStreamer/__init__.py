@@ -10,6 +10,8 @@ import requests
 import os
 import concurrent.futures
 import plistlib
+import subprocess
+import platform
 from flask import Flask, request, jsonify, redirect, url_for
 from urllib.parse import urlparse
 from time import sleep
@@ -189,7 +191,7 @@ def mount_device(dev):
 
 def refresh_devs():
     global devs
-    tunneld_devices = get_tunneld_devices()
+    tunneld_devices = common.tunneld_devices
 
     if not tunneld_devices:
         logging.warning("No devices returned from get_tunneld_devices().")
@@ -400,6 +402,22 @@ def prompt_device_list(device_list: list):
     except KeyboardInterrupt:
         raise Exception()
 
+def open_directory(path):
+    # Get the operating system type
+    system = platform.system()
+    
+    try:
+        if system == "Windows":
+            # Open directory in Windows Explorer
+            subprocess.Popen(f'explorer "{os.path.abspath(path)}"')
+        elif system == "Darwin":  # macOS
+            # Open directory in Finder
+            subprocess.Popen(["open", os.path.abspath(path)])
+        elif system == "Linux":
+            print("Please go to the ~/.pymobiledevice3/ path to find your pairing file")
+    except Exception as e:
+        print(f"Error opening directory: {e}")
+
 @click.command()
 @click.option('-e', '--version', is_flag=True, default=False, help='Prints the versions of pymobiledevice3 and JITStreamer')
 @click.option('-t', '--timeout', default=5, help='The number of seconds to wait for the pymd3 admin tunnel')
@@ -426,7 +444,10 @@ def start_server(verbose, timeout, pair, version):
         else:
             dev = devices[0]
         dev.pair()
-        if "y" not in input("Continue? [y/N]: ").lower():
+        if "n" not in input("Show Pairing file? [y/N]: ").lower():
+            open_directory(common.get_home_folder)
+            return
+        else:
             return
 
     log_levels = [logging.WARNING, logging.INFO, logging.DEBUG]
