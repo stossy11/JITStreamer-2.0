@@ -445,7 +445,8 @@ def start_server(verbose, timeout, pair, version):
             dev = devices[0]
         dev.pair()
         if "n" not in input("Show Pairing file? [y/N]: ").lower():
-            open_directory(common.get_home_folder)
+            currentpath = common.get_home_folder()
+            open_directory(currentpath)
             return
         else:
             return
